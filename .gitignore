@@ -53,6 +53,7 @@ cover/
 
 # Data
 data/
+checkpoints/
 
 # Translations
 *.mo
