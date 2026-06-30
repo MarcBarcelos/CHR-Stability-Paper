@@ -1,110 +1,111 @@
 variable,category,status,reach,collinear_pairs
-vad_valence_mean,Affect Dimensions,KEEP,0.226,0
-vad_dominance_mean,Affect Dimensions,KEEP,0.195,0
-vad_dominance_std,Affect Dimensions,KEEP,0.139,0
-vad_valence_std,Affect Dimensions,KEEP,0.123,0
-vad_arousal_mean,Affect Dimensions,KEEP,0.115,0
-vad_arousal_std,Affect Dimensions,KEEP,0.065,0
-topic_cluster_entropy,Clustering & Diversity,DROP,0.144,3
-max_cluster_share,Clustering & Diversity,KEEP,0.129,1
-cumulative_semantic_trajectory_length,Coherence & Trajectory,DROP,0.093,4
-semantic_trajectory_length_per_word,Coherence & Trajectory,KEEP,0.23,0
-semantic_range_max_dist,Coherence & Trajectory,KEEP,0.229,0
-semantic_drift_start_end,Coherence & Trajectory,KEEP,0.165,0
-segment_transition_variability,Coherence & Trajectory,KEEP,0.14,0
-concreteness_mean,Concreteness & Imagery,KEEP,0.307,1
-concreteness_std,Concreteness & Imagery,KEEP,0.156,0
-emo_trust,Discrete Emotions,KEEP,0.255,0
-emo_anticipation,Discrete Emotions,KEEP,0.252,0
-emo_joy,Discrete Emotions,KEEP,0.223,0
-emo_sadness,Discrete Emotions,KEEP,0.206,0
-emo_diversity,Discrete Emotions,KEEP,0.2,0
-emo_anger,Discrete Emotions,KEEP,0.184,0
-emo_surprise,Discrete Emotions,KEEP,0.169,0
-emo_disgust,Discrete Emotions,KEEP,0.158,0
-emo_fear,Discrete Emotions,KEEP,0.153,0
-sentence_length_median,Document Scale,DROP,0.175,7
-sentence_length_mean,Document Scale,DROP,0.174,7
-n_tokens,Document Scale,DROP,0.112,6
-n_characters,Document Scale,DROP,0.112,6
-doc_length,Document Scale,DROP,0.111,6
-sentence_length_std,Document Scale,KEEP,0.137,0
-n_sentences,Document Scale,KEEP,0.123,4
-PPL_unigram_win_mean,LM Entropy,DROP,0.107,1
-H_3gram_self_nats,LM Entropy,KEEP,0.179,0
-PPL_3gram_self_nats,LM Entropy,KEEP,0.153,4
-H_unigram_win_mean_nats,LM Entropy,KEEP,0.116,1
-H_unigram_win_std_nats,LM Entropy,KEEP,0.073,0
-prevalence_mean,Lexical Register,DROP,0.313,10
-aoa_std,Lexical Register,DROP,0.288,5
-aoa_mean,Lexical Register,KEEP,0.292,5
-n_unique_tokens,Lexical Richness,DROP,0.153,4
-proportion_unique_tokens,Lexical Richness,KEEP,0.236,0
-oov_ratio,Lexical Richness,KEEP,0.153,0
-mattr,Lexical Richness,KEEP,0.152,0
-alpha_ratio,Lexical Richness,KEEP,0.073,0
-semantic_dispersion,On-topic vs. Dispersion,KEEP,0.242,0
-pos_prop_PROPN,POS Distribution,DROP,0.325,12
-pos_prop_ADP,POS Distribution,DROP,0.306,6
-pos_prop_VERB,POS Distribution,DROP,0.306,8
-pos_prop_NOUN,POS Distribution,DROP,0.275,1
-pos_prop_PRON,POS Distribution,DROP,0.272,6
-pos_prop_SCONJ,POS Distribution,DROP,0.27,1
-pos_prop_SYM,POS Distribution,DROP,0.139,8
-pos_prop_ADJ,POS Distribution,KEEP,0.299,2
-pos_prop_DET,POS Distribution,KEEP,0.297,2
-pos_prop_PART,POS Distribution,KEEP,0.266,1
-pos_prop_AUX,POS Distribution,KEEP,0.262,2
-pos_prop_ADV,POS Distribution,KEEP,0.254,0
-pos_prop_CCONJ,POS Distribution,KEEP,0.254,0
-pos_prop_PUNCT,POS Distribution,KEEP,0.11,0
-pos_prop_NUM,POS Distribution,KEEP,0.104,0
-pos_prop_X,POS Distribution,KEEP,0.102,0
-pos_prop_INTJ,POS Distribution,KEEP,0.053,0
-comma_rate,Punctuation Style,KEEP,0.125,0
-quotation_rate,Punctuation Style,KEEP,0.092,0
-ellipsis_rate,Punctuation Style,KEEP,0.092,0
-question_rate,Punctuation Style,KEEP,0.073,0
-colon_rate,Punctuation Style,KEEP,0.054,0
-exclamation_rate,Punctuation Style,KEEP,0.045,0
-parenthesis_rate,Punctuation Style,KEEP,0.044,0
-dash_rate,Punctuation Style,KEEP,0.043,0
-semicolon_rate,Punctuation Style,KEEP,0.037,0
-flesch_kincaid_grade,Readability,DROP,0.219,6
-gunning_fog,Readability,DROP,0.207,9
-rix,Readability,DROP,0.195,6
-automated_readability_index,Readability,DROP,0.134,8
-coleman_liau_index,Readability,DROP,0.134,8
-lix,Readability,KEEP,0.25,3
-smog,Readability,KEEP,0.235,0
-flesch_reading_ease,Readability,KEEP,0.219,3
-top_ngram_chr_fraction_4,Repetition,DROP,0.155,1
-duplicate_ngram_chr_fraction_6,Repetition,DROP,0.135,5
-duplicate_ngram_chr_fraction_7,Repetition,DROP,0.106,5
-duplicate_ngram_chr_fraction_9,Repetition,DROP,0.085,4
-duplicate_ngram_chr_fraction_10,Repetition,DROP,0.081,4
-top_ngram_chr_fraction_3,Repetition,KEEP,0.184,1
-duplicate_ngram_chr_fraction_5,Repetition,KEEP,0.175,2
-top_ngram_chr_fraction_2,Repetition,KEEP,0.156,0
-duplicate_ngram_chr_fraction_8,Repetition,KEEP,0.091,4
-subordination_ratio,Syntactic Complexity,DROP,0.234,5
-coordination_ratio,Syntactic Complexity,DROP,0.211,6
-parse_tree_depth_std,Syntactic Complexity,DROP,0.152,8
-prop_complex_sentences,Syntactic Complexity,KEEP,0.318,5
-mean_dependents_per_head,Syntactic Complexity,KEEP,0.297,5
-clauses_per_sentence,Syntactic Complexity,KEEP,0.263,5
-parse_tree_depth_mean,Syntactic Complexity,KEEP,0.206,8
-dependency_distance_std,Syntax,DROP,0.176,8
-dependency_distance_mean,Syntax,DROP,0.172,8
-prop_adjacent_dependency_relation_std,Syntax,KEEP,0.257,0
-prop_adjacent_dependency_relation_mean,Syntax,KEEP,0.218,0
-pc_top5_strength,Topic Strength & Volume,DROP,0.154,2
-semantic_volume_logdet,Topic Strength & Volume,KEEP,0.156,2
-pc1_topic_strength,Topic Strength & Volume,KEEP,0.119,0
-syllables_per_token_mean,Word Form Complexity,DROP,0.169,2
-token_length_mean,Word Form Complexity,DROP,0.134,8
-token_length_median,Word Form Complexity,DROP,0.134,8
-mean_word_length,Word Form Complexity,KEEP,0.151,0
-token_length_std,Word Form Complexity,KEEP,0.142,0
-syllables_per_token_std,Word Form Complexity,KEEP,0.141,0
-syllables_per_token_median,Word Form Complexity,KEEP,0.139,1
+vad_valence_mean,Affect Dimensions,KEEP,0.097,0
+vad_arousal_std,Affect Dimensions,KEEP,0.097,0
+vad_valence_std,Affect Dimensions,KEEP,0.089,0
+vad_dominance_mean,Affect Dimensions,KEEP,0.079,0
+vad_arousal_mean,Affect Dimensions,KEEP,0.069,0
+vad_dominance_std,Affect Dimensions,KEEP,0.064,0
+topic_cluster_entropy,Clustering & Diversity,DROP,0.142,5
+max_cluster_share,Clustering & Diversity,KEEP,0.126,3
+semantic_trajectory_length_per_word,Coherence & Trajectory,DROP,0.127,1
+cumulative_semantic_trajectory_length,Coherence & Trajectory,DROP,0.114,6
+semantic_range_max_dist,Coherence & Trajectory,KEEP,0.14,0
+semantic_drift_start_end,Coherence & Trajectory,KEEP,0.073,0
+segment_transition_variability,Coherence & Trajectory,KEEP,0.037,0
+concreteness_mean,Concreteness & Imagery,KEEP,0.148,0
+concreteness_std,Concreteness & Imagery,KEEP,0.096,0
+emo_trust,Discrete Emotions,KEEP,0.106,0
+emo_anticipation,Discrete Emotions,KEEP,0.105,0
+emo_diversity,Discrete Emotions,KEEP,0.099,0
+emo_fear,Discrete Emotions,KEEP,0.095,0
+emo_joy,Discrete Emotions,KEEP,0.092,0
+emo_sadness,Discrete Emotions,KEEP,0.087,0
+emo_anger,Discrete Emotions,KEEP,0.083,0
+emo_surprise,Discrete Emotions,KEEP,0.08,0
+emo_disgust,Discrete Emotions,KEEP,0.073,0
+sentence_length_median,Document Scale,DROP,0.227,12
+sentence_length_mean,Document Scale,DROP,0.226,11
+n_sentences,Document Scale,DROP,0.136,6
+doc_length,Document Scale,DROP,0.128,6
+n_tokens,Document Scale,DROP,0.128,6
+n_characters,Document Scale,DROP,0.128,6
+sentence_length_std,Document Scale,KEEP,0.167,0
+H_unigram_win_mean_nats,LM Entropy,DROP,0.197,2
+H_3gram_self_nats,LM Entropy,DROP,0.161,8
+PPL_unigram_win_mean,LM Entropy,KEEP,0.203,2
+PPL_3gram_self_nats,LM Entropy,KEEP,0.153,7
+H_unigram_win_std_nats,LM Entropy,KEEP,0.13,0
+aoa_std,Lexical Register,DROP,0.133,1
+aoa_mean,Lexical Register,KEEP,0.178,1
+prevalence_mean,Lexical Register,KEEP,0.08,0
+mattr,Lexical Richness,DROP,0.2,2
+n_unique_tokens,Lexical Richness,DROP,0.151,7
+alpha_ratio,Lexical Richness,KEEP,0.236,1
+proportion_unique_tokens,Lexical Richness,KEEP,0.173,4
+oov_ratio,Lexical Richness,KEEP,0.107,0
+semantic_dispersion,On-topic vs. Dispersion,KEEP,0.156,1
+pos_prop_PUNCT,POS Distribution,DROP,0.231,1
+pos_prop_NOUN,POS Distribution,KEEP,0.205,0
+pos_prop_ADP,POS Distribution,KEEP,0.201,0
+pos_prop_DET,POS Distribution,KEEP,0.178,0
+pos_prop_ADJ,POS Distribution,KEEP,0.171,0
+pos_prop_INTJ,POS Distribution,KEEP,0.161,0
+pos_prop_SCONJ,POS Distribution,KEEP,0.134,0
+pos_prop_PRON,POS Distribution,KEEP,0.116,0
+pos_prop_VERB,POS Distribution,KEEP,0.108,0
+pos_prop_CCONJ,POS Distribution,KEEP,0.106,0
+pos_prop_AUX,POS Distribution,KEEP,0.1,0
+pos_prop_ADV,POS Distribution,KEEP,0.095,0
+pos_prop_PROPN,POS Distribution,KEEP,0.091,0
+pos_prop_PART,POS Distribution,KEEP,0.081,0
+pos_prop_NUM,POS Distribution,KEEP,0.061,0
+pos_prop_X,POS Distribution,KEEP,0.057,0
+pos_prop_SYM,POS Distribution,KEEP,0.04,0
+quotation_rate,Punctuation Style,KEEP,0.189,0
+question_rate,Punctuation Style,KEEP,0.186,0
+exclamation_rate,Punctuation Style,KEEP,0.101,0
+colon_rate,Punctuation Style,KEEP,0.079,0
+comma_rate,Punctuation Style,KEEP,0.071,0
+ellipsis_rate,Punctuation Style,KEEP,0.068,0
+parenthesis_rate,Punctuation Style,KEEP,0.066,0
+semicolon_rate,Punctuation Style,KEEP,0.05,0
+dash_rate,Punctuation Style,KEEP,0.034,0
+flesch_reading_ease,Readability,DROP,0.253,9
+automated_readability_index,Readability,DROP,0.248,11
+lix,Readability,DROP,0.247,10
+flesch_kincaid_grade,Readability,DROP,0.243,11
+gunning_fog,Readability,DROP,0.24,11
+smog,Readability,KEEP,0.24,1
+coleman_liau_index,Readability,KEEP,0.236,2
+rix,Readability,KEEP,0.226,8
+duplicate_ngram_chr_fraction_6,Repetition,DROP,0.168,5
+duplicate_ngram_chr_fraction_7,Repetition,DROP,0.132,5
+duplicate_ngram_chr_fraction_9,Repetition,DROP,0.092,4
+duplicate_paragraph_chr_fraction,Repetition,DROP,0.088,1
+duplicate_ngram_chr_fraction_10,Repetition,DROP,0.084,4
+duplicate_ngram_chr_fraction_5,Repetition,KEEP,0.201,2
+top_ngram_chr_fraction_3,Repetition,KEEP,0.151,0
+top_ngram_chr_fraction_4,Repetition,KEEP,0.13,0
+top_ngram_chr_fraction_2,Repetition,KEEP,0.115,0
+duplicate_ngram_chr_fraction_8,Repetition,KEEP,0.106,4
+duplicate_line_chr_fraction,Repetition,KEEP,0.09,1
+prop_complex_sentences,Syntactic Complexity,DROP,0.212,2
+clauses_per_sentence,Syntactic Complexity,DROP,0.205,9
+parse_tree_depth_mean,Syntactic Complexity,KEEP,0.26,9
+coordination_ratio,Syntactic Complexity,KEEP,0.2,6
+subordination_ratio,Syntactic Complexity,KEEP,0.194,7
+parse_tree_depth_std,Syntactic Complexity,KEEP,0.191,0
+mean_dependents_per_head,Syntactic Complexity,KEEP,0.15,0
+dependency_distance_mean,Syntax,DROP,0.229,3
+prop_adjacent_dependency_relation_std,Syntax,KEEP,0.165,0
+dependency_distance_std,Syntax,KEEP,0.083,0
+prop_adjacent_dependency_relation_mean,Syntax,KEEP,0.058,0
+pc_top5_strength,Topic Strength & Volume,DROP,0.138,6
+semantic_volume_logdet,Topic Strength & Volume,DROP,0.122,5
+pc1_topic_strength,Topic Strength & Volume,KEEP,0.127,3
+mean_word_length,Word Form Complexity,DROP,0.236,2
+token_length_mean,Word Form Complexity,DROP,0.164,2
+syllables_per_token_mean,Word Form Complexity,KEEP,0.167,0
+syllables_per_token_std,Word Form Complexity,KEEP,0.088,0
+token_length_median,Word Form Complexity,KEEP,0.074,0
+token_length_std,Word Form Complexity,KEEP,0.071,0
