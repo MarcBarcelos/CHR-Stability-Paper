@@ -4,7 +4,7 @@ A study of stylistic structure in fan-authored fiction on Archive of Our Own (AO
 
 ## Data
 
-The corpus contains a general AO3 sample, published 2022–2026 as well as a fixed subset spanning five specific fandoms (HP, LOTR, MAG, PJ, RPF), published 2000–2024. All six groups have arround 3,000 fanfictions included.
+The corpus contains a general AO3 sample, published 2022–2026 as well as a fixed subset spanning five specific fandoms (Harry Potter, Lord of the Rings, The Magnus Archives, Percy Jackson, and Real Person Fiction), published 2000–2024. All six groups have arround 3,000 fanfictions included.
 
 After deduplication, English-language filtering, and outliers in the bottomn 5th percentile in length, the working corpus is **16,966 texts**.
 
