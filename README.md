@@ -1,6 +1,6 @@
 # CHR Stability Paper
 
-A study of stylistic structure in fan-authored fiction on Archive of Our Own (AO3): which linguistic, semantic, and affective patterns co-vary across texts, and how the resulting stylistic dimensions differ by content rating, fandom, and publication time. Built on the [[`ep-pipeline`] (https://github.com/MarcBarcelos/Expressive-Profile-Pipeline)] feature-extraction and EFA toolkit.
+A study of stylistic structure in fan-authored fiction on Archive of Our Own (AO3): which linguistic, semantic, and affective patterns co-vary across texts, and how the resulting stylistic dimensions differ by content rating, fandom, and publication time. Built on the [`ep-pipeline`](https://github.com/MarcBarcelos/Expressive-Profile-Pipeline) feature-extraction and EFA toolkit.
 
 ## Data
 
