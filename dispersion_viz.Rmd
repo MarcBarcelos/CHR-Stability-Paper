@@ -1,0 +1,164 @@
+---
+title: "Stylistic Dispersion — Visualizations"
+output:
+  html_notebook:
+    toc: true
+    toc_float: true
+---
+
+Renders every visualization produced by `dispersion_regression.R` (the
+primary analysis pipeline), plus a few additional views that summarize
+findings which only existed as tables before now (the rating-level
+heatmap in particular — see section 5).
+
+Replaces `convergence_viz.R`, which was built around `convergence_fanfic.R`'s
+outputs; that script and its brms cache files were deleted once the primary
+analysis moved to the OLS + shrinkage approach here.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, fig.width = 10)
+```
+
+```{r load-pipeline}
+# runs the full pipeline: data prep, all OLS fits, all three stage-2 pooling
+# models. The three brms models load from outputs/brms_cache/ if unchanged
+# (a few seconds); only refits if the cache is stale or missing.
+source("dispersion_regression.R")
+```
+
+## 1. Headline: dispersion trend, pooled
+
+The main result. Fandom x factor, colored by the pooled (shrunk) time-slope;
+starred where the 95% credible interval excludes zero. `random` is excluded
+from the pooling (shown separately in the console output as an unpooled
+control) — see the script for why.
+
+```{r heatmap-main, fig.height=4}
+plot_dispersion_heatmap(shrunk)
+```
+
+## 2. Raw vs pooled: how much did shrinkage change each estimate?
+
+Open grey circle = raw stage-1 OLS slope; filled point + bar = pooled
+estimate with 95% CrI. Segment length shows how far partial pooling pulled
+each raw number — long segments are exactly the cells you should be most
+skeptical of if you only had the raw estimate.
+
+```{r forest-main, fig.height=11}
+plot_shrinkage_forest(shrunk)
+```
+
+## 3. Per-factor detail: binned dispersion over time
+
+Binned mean |deviation from fandom median| against time, per fandom, with a
+loess smooth. Point size = bin n, so precision is visible directly. Useful
+for spotting non-linear patterns a linear `time` slope would average away
+(e.g. RPF's F1 trend is U-shaped, not monotonic — worth remembering when
+reading its "no credible change" result in the main table).
+
+```{r trend-per-factor, fig.height=6, results='asis'}
+for (fk in FACTORS) {
+  cat("### ", fk, "\n")
+  print(plot_dispersion_trend(d, fk))
+  cat("\n\n")
+}
+```
+
+## 4. Rating x time interaction: does rating change the RATE of change?
+
+Fandom x factor, faceted by rating, colored by the pooled `rating:time`
+interaction (shift relative to General Audiences' own trend). This is the
+one that revealed RPF and PJ's divergence was concentrated in their
+Explicit/Mature-rated content rather than uniform across ratings.
+
+```{r heatmap-rating-time, fig.height=5, fig.width=12}
+plot_rating_time_heatmap(shrunk_rt)
+```
+
+### Per-factor detail, raw estimates by fandom
+
+Unpooled `rating:time` estimates (95% CI), one panel per factor, color =
+fandom. Useful for seeing which specific fandom/rating pairs are driving
+the pooled result above.
+
+```{r rating-time-per-factor, fig.height=6, results='asis'}
+for (fk in FACTORS) {
+  cat("#### ", fk, "\n")
+  print(plot_rating_time_by_fandom(rating_time_effects, fk))
+  cat("\n\n")
+}
+```
+
+## 5. Rating x average dispersion level
+
+This is new — the additive `rating` effect (does dispersion sit higher or
+lower overall for this rating, not its trend over time) was computed early
+in the pipeline but never visualized until now. It turned out to be far more
+pervasive than the interaction above (121 of 200 cells credible) and shows a
+clean split: F3/F4/F7/F8 (Negative Affect, length, Conversationality,
+Positive Affect) sit **lower** in rated content across nearly every fandom;
+F1/F9/F10 (Syntactic Complexity, Narrative Drift, Structural Variability)
+sit **higher**.
+
+```{r heatmap-rating-level, fig.height=5, fig.width=12}
+plot_rating_level_heatmap(shrunk_rl)
+```
+
+## 6. Other metadata: logwords / growth_resid / is_new_author
+
+Not pooled (nuisance covariates, not a primary question) — just a quick
+visibility pass so these aren't left completely unexamined. `logwords` is a
+strong, expected control (longer texts deviate less from the median);
+`growth_resid` contributes little on its own; `is_new_author` shows a
+modest, plausible "newcomers are somewhat more idiosyncratic" pattern.
+
+```{r other-metadata-plot, fig.height=5}
+other_metadata_summary %>%
+  mutate(term = factor(term, levels = c("logwords", "growth_resid", "is_new_authorTRUE"))) %>%
+  ggplot(aes(fandom, mean_estimate, fill = n_credible)) +
+  geom_col() +
+  geom_hline(yintercept = 0, linetype = 2, color = "grey40") +
+  facet_wrap(~ term, scales = "free_y") +
+  scale_fill_gradient(low = "grey80", high = "#d7191c", name = "n factors\ncredible") +
+  labs(title = "Other metadata effects on dispersion, mean estimate per fandom",
+       x = NULL, y = "mean coefficient across 10 factors") +
+  theme_bw(base_size = 11) +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))
+```
+
+## 7. Non-linearity robustness check
+
+Motivated by looking at section 3's trend plots — MAG and PJ's F8 both show
+what looks like a rise-then-decline shape, not a straight line. For every
+credible cell in `shrunk`, refit with a flexible (natural spline) time term
+and check whether that curvature is statistically real, and whether the
+early-vs-late direction still agrees with the linear model's label.
+
+**Result: none of the 14 credible cells show significant non-linearity**
+(smallest p = .094, MAG-F8), and 13 of 14 keep the same direction under the
+flexible fit. The visual "hump" in MAG/PJ-F8 below is real in the point
+estimate, but the confidence ribbon is wide enough that a straight line
+stays plausible inside it — the linear results hold up.
+
+```{r nonlinearity-table}
+nonlinearity_check %>% arrange(nonlinear_p)
+```
+
+```{r spline-comparison, fig.height=6}
+print(plot_spline_comparison(d, "MAG", "F8"))
+print(plot_spline_comparison(d, "PJ", "F8"))
+```
+
+## 8. Collinearity checks (diagnostic, not a finding)
+
+`growth_resid` is orthogonalized to `time` by construction — confirms it
+stayed that way for the OLS predictor set (section 6 of the script) and for
+the rating interaction's predictor set (section 7's `rating_time_collinearity`).
+
+```{r vif-table}
+vif_by_fandom
+```
+
+```{r rating-collinearity-table}
+rating_time_collinearity %>% arrange(desc(incremental_r2_from_rating))
+```
