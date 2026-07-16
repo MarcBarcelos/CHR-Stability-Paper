@@ -16,9 +16,8 @@ Run in this order; each notebook persists its state so later stages can be re-ru
 |---|---|---|
 | 1 | `run_AO3_scoring.py` | Combines the two source corpora and scores all ~110 linguistic/semantic/affective/structural metrics via `ep_pipeline` → `data/AO3metrics_full.csv` |
 | 2 | `check_pre_efa_assumptions.ipynb` | Sample size, multicollinearity pruning, normality (Yeo–Johnson transform), outlier winsorization, KMO/Bartlett, iterative per-variable MSA pruning → `data/efa_state.joblib` (74 variables retained) |
-| 3 | `fit_efa_AO3.ipynb` | Parallel analysis for factor count, fits an oblimin-rotated EFA (minres), communality/loading diagnostics, drops poor-fitting variables and refits, names the factors → `data/efa_factor_scores.csv` |
+| 3 | `fit_efa_AO3.ipynb` | Parallel analysis for factor count, fits an oblimin-rotated EFA (minres), communality/loading diagnostics, drops poor-fitting variables and refits (71 variables retained), names the factors → `data/efa_factor_scores.csv` |
 | 4 | `explore_factor_scores.ipynb` | Descriptive stats, distributions, factor intercorrelations, and trajectories of the 10 factors over time, by content rating, and by fandom (point plots, radar charts, heatmaps) |
-| — | `explore_chr.ipynb` | Scratch notebook for inspecting the scored metrics table; not part of the main pipeline |
 
 Overall fit: KMO ≈ 0.85, Bartlett p < .001, 10 factors retained (parallel analysis supported up to 16; solution quality plateaued by k≈10–11).
 
