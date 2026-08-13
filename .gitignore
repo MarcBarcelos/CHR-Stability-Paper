@@ -52,9 +52,18 @@ coverage.xml
 .pytest_cache/
 cover/
 
-# Data
-data/
+# Data - everything under data/ is ignored by default (real raw/derived data,
+# the private author mapping, large anonymized corpora hosted externally on
+# HuggingFace/OSF) except the anonymized final results file, which is small
+# enough to track directly.
+data/*
+!data/final_full_dataset.csv
 checkpoints/
+
+# Anonymization scripts stay local-only - they encode the exact deanonymization
+# mapping logic and are not meant to ship with the rest of the pipeline code.
+scripts/anonymize_authors.py
+scripts/anonymize_derived_results.py
 
 # Translations
 *.mo

@@ -14,10 +14,13 @@ Run in this order; each notebook persists its state so later stages can be re-ru
 
 | Step | File | What it does |
 |---|---|---|
-| 1 | `run_AO3_scoring.py` | Combines the two source corpora and scores all ~110 linguistic/semantic/affective/structural metrics via `ep_pipeline` → `data/AO3metrics_full.csv` |
-| 2 | `check_pre_efa_assumptions.ipynb` | Sample size, multicollinearity pruning, normality (Yeo–Johnson transform), outlier winsorization, KMO/Bartlett, iterative per-variable MSA pruning → `data/efa_state.joblib` (74 variables retained) |
-| 3 | `fit_efa_AO3.ipynb` | Parallel analysis for factor count, fits an oblimin-rotated EFA (minres), communality/loading diagnostics, drops poor-fitting variables and refits (71 variables retained), names the factors → `data/efa_factor_scores.csv` |
-| 4 | `explore_factor_scores.ipynb` | Descriptive stats, distributions, factor intercorrelations, and trajectories of the 10 factors over time, by content rating, and by fandom (point plots, radar charts, heatmaps) |
+| 1 | `scripts/run_AO3_scoring.py` | Combines the two source corpora and scores all ~110 linguistic/semantic/affective/structural metrics via `ep_pipeline` → `data/AO3metrics_full.csv` |
+| 2 | `nbs/check_pre_efa_assumptions.ipynb` | Sample size, multicollinearity pruning, normality (Yeo–Johnson transform), outlier winsorization, KMO/Bartlett, iterative per-variable MSA pruning → `data/efa_state.joblib` (74 variables retained) |
+| 3 | `nbs/fit_efa_AO3.ipynb` | Parallel analysis for factor count, fits an oblimin-rotated EFA (minres), communality/loading diagnostics, drops poor-fitting variables and refits (71 variables retained), names the factors → `data/efa_factor_scores.csv` |
+| 4 | `nbs/explore_factor_scores.ipynb` | Descriptive stats, distributions, factor intercorrelations, and trajectories of the 10 factors over time, by content rating, and by fandom (point plots, radar charts, heatmaps) |
+| 5 | `scripts/classification.py` | Cross-validated logistic regression predicting fandom and content rating from the 10 factor scores; saves per-class metrics, confusion matrices, and coefficient plots |
+
+If you don't want to run the pipeline yourself, `data/final_full_dataset.csv` is the only data file tracked in git — it already has the full anonymized final output (metadata + cleaned variables + factor scores), and every notebook above falls back to it automatically when its usual upstream input is missing.
 
 Overall fit: KMO ≈ 0.85, Bartlett p < .001, 10 factors retained (parallel analysis supported up to 16; solution quality plateaued by k≈10–11).
 
@@ -36,15 +39,16 @@ Overall fit: KMO ≈ 0.85, Bartlett p < .001, 10 factors retained (parallel anal
 | F9 | Narrative Drift | semantic dispersion/movement across the text |
 | F10 | Structural Variability | variable sentence/dependency/parse structure |
 
-Full loading-level interpretation notes are in the markdown cell at the top of `fit_efa_AO3.ipynb` and `explore_factor_scores.ipynb`.
+Full loading-level interpretation notes are in the markdown cell at the top of `nbs/fit_efa_AO3.ipynb` and `nbs/explore_factor_scores.ipynb`.
 
 ## Outputs
 
 - `data/efa_state.joblib` — cleaned, scaled variable set + correlation matrix (input to step 3)
 - `data/efa_factor_scores.csv` — one row per text: metadata + 10 factor scores (input to step 4)
-- `outputs/visualizations/` — diagnostic and exploratory plots (correlation heatmap, scree plot, communalities, MSA, factor distributions, radar profiles, trajectories)
-- `outputs/results/` — scoring checkpoints and tabular diagnostics (multicollinearity pairs, normality, MSA drop log, etc.)
+- `data/final_full_dataset.csv` — metadata + cleaned variables + factor scores in one file (input to step 5)
+- `outputs/visualizations/` — diagnostic and exploratory plots (correlation heatmap, scree plot, communalities, MSA, factor distributions, radar profiles, trajectories, classification confusion matrices and coefficient plots)
+- `outputs/results/` — scoring checkpoints and tabular diagnostics (multicollinearity pairs, normality, MSA drop log, classification metrics/coefficients, etc.)
 
 ## Setup
 
-Requires `ep_pipeline` installed plus the model weights/lexicons in `../models/`. `data/` and `../models/` are not tracked in git.
+Requires `ep_pipeline` installed plus the model weights/lexicons in `../models/`. `../models/` is not tracked in git, and neither is most of `data/` — `data/final_full_dataset.csv` is the one exception, tracked directly so the pipeline's final anonymized output is available without rerunning anything.
