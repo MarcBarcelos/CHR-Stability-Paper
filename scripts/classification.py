@@ -13,24 +13,26 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix, roc_auc_score
 from sklearn.preprocessing import label_binarize
 
-sns.set_theme(style='whitegrid', font_scale=1.0)
+sns.set_theme(style="whitegrid", font_scale=1.0)
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent  # scripts/ is one level under chr_stability_paper/
-DATA_PATH = PROJECT_ROOT / "data" / "final_full_dataset.csv"
-RESULTS_DIR = PROJECT_ROOT / "outputs" / "results" / "classification"
+PROJECT_ROOT = (
+    Path(__file__).resolve().parent.parent
+)  # scripts/ is one level under chr_stability_paper/
+DATA_PATH = PROJECT_ROOT / "dat" / "anonymized_data.csv"
+RESULTS_DIR = PROJECT_ROOT / "outputs" / "results" / "classification_weighted"
 FIG_DIR = PROJECT_ROOT / "outputs" / "visualizations"
 
 # EFA factor -> interpreted construct name
 FACTOR_TO_CATEGORY = {
-    "F1":  "Syntactic Complexity",
-    "F2":  "Lexical Sophistication",
-    "F3":  "Negative Affect",
-    "F4":  "Lexical Richness",
-    "F5":  "Repetitiveness",
-    "F6":  "Concreteness",
-    "F7":  "Conversationality",
-    "F8":  "Positive Affect",
-    "F9":  "Narrative Drift",
+    "F1": "Syntactic Complexity",
+    "F2": "Lexical Sophistication",
+    "F3": "Negative Affect",
+    "F4": "Lexical Richness",
+    "F5": "Repetitiveness",
+    "F6": "Concreteness",
+    "F7": "Conversationality",
+    "F8": "Positive Affect",
+    "F9": "Narrative Drift",
     "F10": "Structural Variability",
 }
 
@@ -40,17 +42,24 @@ TARGETS = {
         "class_labels": None,  # sorted(y.unique()) at runtime
         "colors": ["#F49F0A", "#4B9531", "#89023E", "#26547C", "#5AB3B3", "#F24236"],
         "grid": (2, 3),
+        "weights": None,
     },
     "rating": {
         "column": "rating",
-        "class_labels": ["General Audiences", "Teen And Up Audiences", "Mature", "Explicit"],
+        "class_labels": [
+            "General Audiences",
+            "Teen And Up Audiences",
+            "Mature",
+            "Explicit",
+        ],
         "colors": {
-            "General Audiences":     "#88D498",
+            "General Audiences": "#88D498",
             "Teen And Up Audiences": "#508991",
-            "Mature":                "#FFBC42",
-            "Explicit":              "#D36135",
+            "Mature": "#FFBC42",
+            "Explicit": "#D36135",
         },
         "grid": (2, 2),
+        "weights": [0.344, 0.355, 0.136, 0.165],
     },
 }
 
@@ -64,7 +73,8 @@ def load_target(df, spec):
     y = df[spec["column"]]
     X = df[[col for col in df.columns if col.startswith("F") and col[1:].isdigit()]]
     class_labels = spec["class_labels"] or sorted(y.unique())
-    return X, y, class_labels
+    weights = spec["weights"]
+    return X, y, class_labels, weights
 
 
 def run_classification(X, y, class_labels, random_state=1999, n_splits=5):
@@ -76,7 +86,14 @@ def run_classification(X, y, class_labels, random_state=1999, n_splits=5):
 
     scores = {
         k: []
-        for k in ["fold", "accuracy", "macro_precision", "macro_recall", "macro_f1", "roc_auc_ovr"]
+        for k in [
+            "fold",
+            "accuracy",
+            "macro_precision",
+            "macro_recall",
+            "macro_f1",
+            "roc_auc_ovr",
+        ]
     }
     per_class_scores = {
         f"{c}_{m}": [] for c in class_labels for m in ["precision", "recall", "f1"]
@@ -120,7 +137,13 @@ def run_classification(X, y, class_labels, random_state=1999, n_splits=5):
 
 def print_summary(scores, per_class_scores, class_labels):
     print("\n--- Average Performance Across Folds ---")
-    for metric in ["accuracy", "macro_precision", "macro_recall", "macro_f1", "roc_auc_ovr"]:
+    for metric in [
+        "accuracy",
+        "macro_precision",
+        "macro_recall",
+        "macro_f1",
+        "roc_auc_ovr",
+    ]:
         print(f"{metric}: {np.mean(scores[metric]):.4f} ± {np.std(scores[metric]):.4f}")
 
     print("\n--- Per-Class Performance (mean ± std) ---")
@@ -138,8 +161,13 @@ def plot_confusion_matrix(cm, class_labels, out_path):
     fig_size = max(3, n_classes * 0.9)
     plt.figure(figsize=(fig_size, fig_size), dpi=500)
     sns.heatmap(
-        cm, annot=True, fmt="d", cmap="Blues", cbar=False,
-        xticklabels=class_labels, yticklabels=class_labels,
+        cm,
+        annot=True,
+        fmt="d",
+        cmap="Blues",
+        cbar=False,
+        xticklabels=class_labels,
+        yticklabels=class_labels,
     )
     plt.xlabel(r"$\bf{Predicted}$")
     plt.ylabel(r"$\bf{True}$")
@@ -150,7 +178,9 @@ def plot_confusion_matrix(cm, class_labels, out_path):
     plt.close()
 
 
-def build_json_results(class_labels, scores, per_class_scores, coef_array, cm, predictor_columns):
+def build_json_results(
+    class_labels, scores, per_class_scores, coef_array, cm, predictor_columns
+):
     metrics = ["accuracy", "macro_precision", "macro_recall", "macro_f1", "roc_auc_ovr"]
     return {
         "n_classes": len(class_labels),
@@ -185,13 +215,17 @@ def build_json_results(class_labels, scores, per_class_scores, coef_array, cm, p
     }
 
 
-def plot_coefficients(coef_array, class_labels, predictor_columns, colors, grid, out_path):
+def plot_coefficients(
+    coef_array, class_labels, predictor_columns, colors, grid, out_path
+):
     n_classes = len(class_labels)
     n_rows, n_cols = grid
     predictors = [FACTOR_TO_CATEGORY[col] for col in predictor_columns]
     palette = colors if isinstance(colors, dict) else dict(zip(class_labels, colors))
 
-    fig, axes = plt.subplots(n_rows, n_cols, figsize=(3.3 * n_cols, 4 * n_rows), sharey=True, dpi=300)
+    fig, axes = plt.subplots(
+        n_rows, n_cols, figsize=(3.3 * n_cols, 4 * n_rows), sharey=True, dpi=300
+    )
     axes = np.atleast_2d(axes)
 
     for flat_idx, name in enumerate(class_labels):
@@ -203,12 +237,36 @@ def plot_coefficients(coef_array, class_labels, predictor_columns, colors, grid,
 
         reliable = np.abs(means) >= 3 * stds
 
-        ax.scatter(means[reliable], y_display[reliable],
-                   color=color, edgecolor="black", linewidth=1, s=80, alpha=1, zorder=2)
-        ax.scatter(means[~reliable], y_display[~reliable],
-                   color="white", edgecolor="black", linewidth=1, s=80, zorder=2)
-        ax.errorbar(means, y_display, xerr=3 * stds,
-                    fmt="none", ecolor="black", elinewidth=.5, capsize=15, capthick=.5, zorder=1)
+        ax.scatter(
+            means[reliable],
+            y_display[reliable],
+            color=color,
+            edgecolor="black",
+            linewidth=1,
+            s=80,
+            alpha=1,
+            zorder=2,
+        )
+        ax.scatter(
+            means[~reliable],
+            y_display[~reliable],
+            color="white",
+            edgecolor="black",
+            linewidth=1,
+            s=80,
+            zorder=2,
+        )
+        ax.errorbar(
+            means,
+            y_display,
+            xerr=3 * stds,
+            fmt="none",
+            ecolor="black",
+            elinewidth=0.5,
+            capsize=15,
+            capthick=0.5,
+            zorder=1,
+        )
 
         ax.axvline(0, color="0.1", linestyle="--", zorder=0.5)
         ax.set_title("Random" if name == "random" else name, fontweight="bold")
@@ -229,7 +287,9 @@ def plot_coefficients(coef_array, class_labels, predictor_columns, colors, grid,
 
     for row in range(n_rows):
         axes[row, 0].set_yticks(range(len(predictors)))
-        axes[row, 0].set_yticklabels([s.title() for s in predictors[::-1]], fontsize=12, fontweight="bold")
+        axes[row, 0].set_yticklabels(
+            [s.title() for s in predictors[::-1]], fontsize=12, fontweight="bold"
+        )
     fig.supxlabel("Feature Coefficient (log-odds)", fontweight="bold")
     plt.tight_layout()
     plt.savefig(out_path, bbox_inches="tight")
@@ -240,16 +300,20 @@ def plot_coefficients(coef_array, class_labels, predictor_columns, colors, grid,
 def run_target(df, target_name, spec):
     print(f"\n{'=' * 70}\nRunning classification for target: {target_name}\n{'=' * 70}")
 
-    X, y, class_labels = load_target(df, spec)
+    X, y, class_labels, weights = load_target(df, spec)
     scores, per_class_scores, coef_array, cm, predictor_columns = run_classification(
         X, y, class_labels
     )
 
     print_summary(scores, per_class_scores, class_labels)
 
-    plot_confusion_matrix(cm, class_labels, FIG_DIR / f"{target_name}_confusion_matrix.png")
+    plot_confusion_matrix(
+        cm, class_labels, FIG_DIR / f"{target_name}_confusion_matrix.png"
+    )
 
-    results = build_json_results(class_labels, scores, per_class_scores, coef_array, cm, predictor_columns)
+    results = build_json_results(
+        class_labels, scores, per_class_scores, coef_array, cm, predictor_columns
+    )
     results_path = RESULTS_DIR / f"{target_name}_classification_results.json"
     with open(results_path, "w") as f:
         json.dump(results, f)
@@ -267,7 +331,9 @@ def run_target(df, target_name, spec):
             for m in ["precision", "recall", "f1"]
         ]
     )
-    per_class_df.to_csv(RESULTS_DIR / f"{target_name}_per_class_metrics.csv", index=False)
+    per_class_df.to_csv(
+        RESULTS_DIR / f"{target_name}_per_class_metrics.csv", index=False
+    )
 
     coef_df = pd.DataFrame(
         [
@@ -284,7 +350,11 @@ def run_target(df, target_name, spec):
     print(f"Saved per-class metrics and coefficients CSVs to {RESULTS_DIR}")
 
     plot_coefficients(
-        coef_array, class_labels, predictor_columns, spec["colors"], spec["grid"],
+        coef_array,
+        class_labels,
+        predictor_columns,
+        spec["colors"],
+        spec["grid"],
         FIG_DIR / f"{target_name}_coef_plot.png",
     )
 
