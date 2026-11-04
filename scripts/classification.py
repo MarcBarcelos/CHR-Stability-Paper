@@ -59,7 +59,7 @@ TARGETS = {
             "Explicit": "#D36135",
         },
         "grid": (2, 2),
-        "weights": [0.344, 0.355, 0.136, 0.165],
+        "weights": "balanced",
     },
 }
 
@@ -77,10 +77,15 @@ def load_target(df, spec):
     return X, y, class_labels, weights
 
 
-def run_classification(X, y, class_labels, random_state=1999, n_splits=5):
+def run_classification(X, y, class_labels, weights, random_state=1999, n_splits=5):
     predictor_columns = X.columns
     model = make_pipeline(
-        LogisticRegression(solver="lbfgs", max_iter=1000, random_state=random_state),
+        LogisticRegression(
+            solver="lbfgs",
+            max_iter=1000,
+            random_state=random_state,
+            class_weight=weights,
+        ),
     )
     cv = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
 
@@ -302,7 +307,7 @@ def run_target(df, target_name, spec):
 
     X, y, class_labels, weights = load_target(df, spec)
     scores, per_class_scores, coef_array, cm, predictor_columns = run_classification(
-        X, y, class_labels
+        X, y, class_labels, weights
     )
 
     print_summary(scores, per_class_scores, class_labels)
